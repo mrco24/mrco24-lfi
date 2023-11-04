@@ -88,23 +88,28 @@ _  /  / /  _  /    / /__  / /_/ /_  __/ /__  __/
 				defer wg.Done()
 				fullURL := url + payload
 
-				// Send a GET request to the URL and store the response
-				resp, getErr := http.Get(fullURL)
-				if getErr != nil {
-					fmt.Printf("%sError:%s %s\n", RED, NC, fullURL)
-					return
-				}
-				defer resp.Body.Close()
+				// Check if the URL is valid before making the request
+				if isValidURL(fullURL) {
+					// Send a GET request to the URL and store the response
+					resp, getErr := http.Get(fullURL)
+					if getErr != nil {
+						if verbose {
+							fmt.Printf("%sError:%s %s\n", RED, NC, fullURL)
+						}
+						return
+					}
+					defer resp.Body.Close()
 
-				if verbose {
-					fmt.Printf("%sRequest:%s %s\n", GREEN, NC, fullURL)
-				}
+					if verbose {
+						fmt.Printf("%sRequest:%s %s\n", GREEN, NC, fullURL)
+					}
 
-				// Check if the response contains "root:" to identify vulnerabilities
-				body, readErr := ioutil.ReadAll(resp.Body)
-				if readErr == nil && strings.Contains(string(body), "root:") {
-					fmt.Printf("%sVulnerable:%s %s\n", RED, NC, fullURL)
-					output.WriteString(fullURL + "\n")
+					// Check if the response contains "root:" to identify vulnerabilities
+					body, readErr := ioutil.ReadAll(resp.Body)
+					if readErr == nil && strings.Contains(string(body), "root:") {
+						fmt.Printf("%sVulnerable:%s %s\n", RED, NC, fullURL)
+						output.WriteString(fullURL + "\n")
+					}
 				}
 			}(url, payload)
 		}
@@ -112,4 +117,10 @@ _  /  / /  _  /    / /__  / /_/ /_  __/ /__  __/
 
 	// Wait for all tasks to complete
 	wg.Wait()
+}
+
+// isValidURL checks if a URL is valid
+func isValidURL(url string) bool {
+	_, err := http.Get(url)
+	return err == nil
 }
