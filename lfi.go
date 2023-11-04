@@ -28,6 +28,7 @@ func main() {
 	payloadsFile := flag.String("p", "payloads.txt", "File containing payloads")
 	outputFile := flag.String("o", "vulnerable_urls.txt", "Output file for vulnerable URLs")
 	verbosity := flag.Bool("v", false, "Enable verbosity for all requests")
+	threads := flag.Int("t", 10, "Number of threads")
 	flag.Parse()
 
 	// Set the verbosity level based on the flag
@@ -80,12 +81,23 @@ _  /  / /  _  /    / /__  / /_/ /_  __/ /__  __/
 	// Create a wait group for synchronization
 	var wg sync.WaitGroup
 
+	// Create a channel for controlling the number of concurrent threads
+	threadCh := make(chan struct{}, *threads)
+
 	// Iterate through URLs and payloads concurrently
 	for _, url := range urls {
 		for _, payload := range payloads {
+			// Acquire a slot from the channel to control concurrency
+			threadCh <- struct{}{}
+
 			wg.Add(1)
 			go func(url, payload string) {
 				defer wg.Done()
+				defer func() {
+					// Release the slot back to the channel
+					<-threadCh
+				}()
+
 				fullURL := url + payload
 
 				// Check if the URL is valid before making the request
