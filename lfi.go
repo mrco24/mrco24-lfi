@@ -17,12 +17,20 @@ const (
     NC   = "\033[0m" // No Color
 )
 
+var (
+    verbose = false
+)
+
 func main() {
     // Command-line flags
     urlsFile := flag.String("u", "urls.txt", "File containing target URLs")
     payloadsFile := flag.String("p", "payloads.txt", "File containing payloads")
     outputFile := flag.String("o", "vulnerable_urls.txt", "Output file for vulnerable URLs")
+    verbosity := flag.Bool("v", false, "Enable verbosity")
     flag.Parse()
+
+    // Set the verbosity level based on the flag
+    verbose = *verbosity
 
     // Generate the banner
     banner := `
@@ -89,7 +97,9 @@ _  /  / /  _  /    / /__  / /_/ /_  __/ /__  __/
                 // Check if the response contains "root:" to identify vulnerabilities
                 body, readErr := ioutil.ReadAll(resp.Body)
                 if readErr == nil && strings.Contains(string(body), "root:") {
-                    fmt.Printf("%sVulnerable:%s %s\n", RED, NC, fullURL)
+                    if verbose {
+                        fmt.Printf("%sVulnerable:%s %s\n", RED, NC, fullURL)
+                    }
                     output.WriteString(fullURL + "\n")
                 }
             }(url, payload)
