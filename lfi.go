@@ -1,6 +1,7 @@
 package main
 
 import (
+    "flag"
     "fmt"
     "io/ioutil"
     "net/http"
@@ -17,6 +18,12 @@ const (
 )
 
 func main() {
+    // Command-line flags
+    urlsFile := flag.String("u", "urls.txt", "File containing target URLs")
+    payloadsFile := flag.String("p", "payloads.txt", "File containing payloads")
+    outputFile := flag.String("o", "vulnerable_urls.txt", "Output file for vulnerable URLs")
+    flag.Parse()
+
     // Generate the banner
     banner := `
   ____ _   _ ____ ____ ____ _  _ 
@@ -25,14 +32,9 @@ func main() {
 `
     fmt.Print(CYAN, banner, NC)
 
-    // Define the target URLs and payloads files
-    urlsFile := "urls.txt"
-    payloadsFile := "payloads.txt"
-    outputFile := "vulnerable_urls.txt"
-
     // Check if the URLs and payloads files exist
-    _, urlsErr := os.Stat(urlsFile)
-    _, payloadsErr := os.Stat(payloadsFile)
+    _, urlsErr := os.Stat(*urlsFile)
+    _, payloadsErr := os.Stat(*payloadsFile)
 
     if urlsErr != nil || payloadsErr != nil {
         fmt.Println("URLs file or payloads file not found. Make sure both files exist.")
@@ -40,7 +42,7 @@ func main() {
     }
 
     // Read the list of target URLs from the URLs file
-    urlsData, readURLsErr := ioutil.ReadFile(urlsFile)
+    urlsData, readURLsErr := ioutil.ReadFile(*urlsFile)
     if readURLsErr != nil {
         fmt.Println("Error reading URLs file:", readURLsErr)
         return
@@ -48,7 +50,7 @@ func main() {
     urls := strings.Split(string(urlsData), "\n")
 
     // Read the list of payloads from the payloads file
-    payloadsData, readPayloadsErr := ioutil.ReadFile(payloadsFile)
+    payloadsData, readPayloadsErr := ioutil.ReadFile(*payloadsFile)
     if readPayloadsErr != nil {
         fmt.Println("Error reading payloads file:", readPayloadsErr)
         return
@@ -56,7 +58,7 @@ func main() {
     payloads := strings.Split(string(payloadsData), "\n")
 
     // Initialize the output file
-    output, createOutputErr := os.Create(outputFile)
+    output, createOutputErr := os.Create(*outputFile)
     if createOutputErr != nil {
         fmt.Println("Error creating output file:", createOutputErr)
         return
