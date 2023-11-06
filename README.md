@@ -15,11 +15,17 @@
 </p>
 
 # Installation:
+```
 - go get -u github.com/mrco24/mrco24-lfi
+```
 # Usage:
+```
 - mrco24-lfi -u live_url.txt -p payloads.txt -o output.txt -v
+```
 # Remove =
+```
 - sed 's/=.*$/=/' url.txt | anew | tee -a live_url.txt
+```
 # Current Features:
 - This script will collec
 
