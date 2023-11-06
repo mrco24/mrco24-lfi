@@ -1,5 +1,5 @@
 <h1 align="center">
-<a href="https://cooltext.com"><img src="https://images.cooltext.com/5678561.png" width="886" height="136" alt="MRCO24 - LFI" /></a>
+<a href="https://cooltext.com"><img src="https://images.cooltext.com/5678562.png" width="459" height="110" alt="MRCO24 - LFI" /></a>
 </h1>
 <h4 align="center">LFI Detection</h4>
 <p align="center">
