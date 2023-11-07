@@ -15,7 +15,7 @@
 </p>
 
 # Current Features:
-<img width="427" alt="2023-11-04 22_40_48-kali linux  Running  - Oracle VM VirtualBox" src="https://github.com/mrco24/mrco24-lfi/assets/95030367/5584d1d7-29da-4442-9ee4-36980cadb09d">
+<img width="550" alt="2023-11-04 22_40_48-kali linux  Running  - Oracle VM VirtualBox" src="https://github.com/mrco24/mrco24-lfi/assets/95030367/5584d1d7-29da-4442-9ee4-36980cadb09d">
 
 - This script will collec
 
