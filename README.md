@@ -17,7 +17,17 @@
 # Current Features:
 <img width="550" alt="2023-11-04 22_40_48-kali linux  Running  - Oracle VM VirtualBox" src="https://github.com/mrco24/mrco24-lfi/assets/95030367/5584d1d7-29da-4442-9ee4-36980cadb09d">
 
-- This script will collec
+- **High-Speed Scanning:** Lightning-fast scanning of web applications for Local File Inclusion (LFI) vulnerabilities.
+
+- **Multi-URL Support:** Simultaneously scan multiple URLs for LFI issues.
+
+- **Comprehensive Payload Scanning:** Extensive payload library for thorough testing.
+
+- **Rapid Vulnerability Detection:** Quickly identifies LFI vulnerabilities with minimal false positives.
+
+- **Multi-Threaded:** Utilizes multi-threading for efficient scanning.
+
+- **Vulnerability URL Output:** Provides a list of vulnerable URLs for further analysis or action.
 
 # Installation:
 ```
