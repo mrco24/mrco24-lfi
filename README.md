@@ -29,7 +29,7 @@
 
 - **Vulnerability URL Output:** Provides a list of vulnerable URLs for further analysis or action.
 
-# Installation:
+`mrco24-lfi` requires **go1.19** to install successfully. Run the following command to install the latest version: 
 ```
 go get -u github.com/mrco24/mrco24-lfi
 ```
