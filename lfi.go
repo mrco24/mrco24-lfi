@@ -24,8 +24,8 @@ var (
 
 func main() {
 	
-	urlsFile := flag.String("u", "", "File containing target URLs")
-	payloadsFile := flag.String("p", "", "File containing payloads")
+	urlsFile := flag.String("u", "urls.txt", "File containing target URLs")
+        payloadsFile := flag.String("p", "payloads.txt", "File containing payloads")
 	outputFile := flag.String("o", "", "Output file for vulnerable URLs")
 	verbosity := flag.Bool("v", false, "Enable verbosity for all requests")
 	threads := flag.Int("t", , "Number of threads")
