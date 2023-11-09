@@ -22,13 +22,11 @@ var (
 )
 
 func main() {
-	var urlFile, payloadFile, outputFile,threads string
-	var verbose bool
-	urlFile := flag.String("u", "urls.txt", "File containing target URLs")
+	urlsFile := flag.String("u", "urls.txt", "File containing target URLs")
 	payloadsFile := flag.String("p", "payloads.txt", "File containing payloads")
 	outputFile := flag.String("o", "vulnerable_urls.txt", "Output file for vulnerable URLs")
-	threads := flag.Int("t", 10, "Number of threads")
 	verbosity := flag.Bool("v", false, "Enable verbosity for all requests")
+	threads := flag.Int("t", 10, "Number of threads")
 	flag.Parse()
 
 	// Set the verbosity level based on the flag
@@ -44,7 +42,7 @@ _  /  / /  _  /    / /__  / /_/ /_  __/ /__  __/_/_____/_  /____  __/  _  /
 `
 	fmt.Print(CYAN, banner, NC)
 
-	_, urlsErr := os.Stat(*urlFile)
+	_, urlsErr := os.Stat(*urlsFile)
 	_, payloadsErr := os.Stat(*payloadsFile)
 
 	if urlsErr != nil || payloadsErr != nil {
@@ -52,7 +50,7 @@ _  /  / /  _  /    / /__  / /_/ /_  __/ /__  __/_/_____/_  /____  __/  _  /
 		return
 	}
 
-	urlsData, readURLsErr := ioutil.ReadFile(*urlFile)
+	urlsData, readURLsErr := ioutil.ReadFile(*urlsFile)
 	if readURLsErr != nil {
 		fmt.Println("Error reading URLs file:", readURLsErr)
 		return
