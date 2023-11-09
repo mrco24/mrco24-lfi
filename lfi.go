@@ -22,6 +22,8 @@ var (
 )
 
 func main() {
+	var urlFile, payloadFile, outputFile,threads string
+	var verbose bool
 	urlFile := flag.String("u", "urls.txt", "File containing target URLs")
 	payloadsFile := flag.String("p", "payloads.txt", "File containing payloads")
 	outputFile := flag.String("o", "vulnerable_urls.txt", "Output file for vulnerable URLs")
