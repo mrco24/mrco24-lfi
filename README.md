@@ -38,8 +38,9 @@
 go get -u github.com/mrco24/mrco24-lfi
 ```
 # Usage:
+url_file name must urls.txt and payloads file name must payloads.txt
 ```
-mrco24-lfi -u live_url.txt -p payloads.txt -o output.txt -v
+mrco24-lfi -u urls.txt -p payloads.txt -o output.txt -v
 ```
 # Remove =
 ```
