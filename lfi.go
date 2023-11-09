@@ -28,7 +28,7 @@ func main() {
 	payloadsFile := flag.String("p", "", "File containing payloads")
 	outputFile := flag.String("o", "", "Output file for vulnerable URLs")
 	verbosity := flag.Bool("v", false, "Enable verbosity for all requests")
-	threads := flag.Int("t", , "Number of threads")
+	threads := flag.Int("t", 15, "Number of threads")
 	flag.Parse()
 
 	// Set the verbosity level based on the flag
