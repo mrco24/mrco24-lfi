@@ -35,7 +35,10 @@
 `mrco24-lfi` requires **go1.19** to install successfully. Run the following command to install the latest version: 
 
 ```sh
+**Old_Go**
 go get -u github.com/mrco24/mrco24-lfi
+**Update_Go**
+go install github.com/mrco24/mrco24-lfi@latest
 ```
 # Usage:
 ```
