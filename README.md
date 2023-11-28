@@ -39,6 +39,10 @@
 go get -u github.com/mrco24/mrco24-lfi
 **Update_Go**
 go install github.com/mrco24/mrco24-lfi@latest
+
+path setup
+
+cp -r /root/go/bin/mrco24-lfi /usr/local/bin
 ```
 # Usage:
 ```
