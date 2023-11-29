@@ -10,7 +10,6 @@ import (
 	"sync"
 )
 
-
 const (
 	RED   = "\033[0;31m"
 	CYAN  = "\033[0;36m"
@@ -23,16 +22,26 @@ var (
 )
 
 func main() {
-	
-	urlsFile := flag.String("u", "", "File containing target URLs")
-	payloadsFile := flag.String("p", "", "File containing payloads")
-	outputFile := flag.String("o", "", "Output file for vulnerable URLs")
-	verbosity := flag.Bool("v", false, "Enable verbosity for all requests")
-	threads := flag.Int("t", 15, "Number of threads")
+
+	var (
+		url       string
+		urlsFile  string
+		payloadsFile string
+		outputFile string
+		verbosity bool
+		threads   int
+	)
+
+	flag.StringVar(&url, "u", "", "Single target URL")
+	flag.StringVar(&urlsFile, "f", "", "File containing target URLs")
+	flag.StringVar(&payloadsFile, "p", "", "File containing payloads")
+	flag.StringVar(&outputFile, "o", "", "Output file for vulnerable URLs")
+	flag.BoolVar(&verbosity, "v", false, "Enable verbosity for all requests")
+	flag.IntVar(&threads, "t", 15, "Number of threads")
 	flag.Parse()
 
 	// Set the verbosity level based on the flag
-	verbose = *verbosity
+	verbose = verbosity
 
 	// Generate the banner
 	banner := `
@@ -45,63 +54,61 @@ _  /  / /  _  /    / /__  / /_/ /_  __/ /__  __/_/_____/_  /____  __/  _  /
 `
 	fmt.Print(CYAN, banner, NC)
 
-	_, urlsErr := os.Stat(*urlsFile)
-	_, payloadsErr := os.Stat(*payloadsFile)
-
-	if urlsErr != nil || payloadsErr != nil {
-		fmt.Println("URLs file or payloads file not found. Make sure both files exist.")
+	if (url == "" && urlsFile == "") || payloadsFile == "" || outputFile == "" {
+		fmt.Println("Invalid input. Please provide the required flags.")
 		return
 	}
 
-	
-	urlsData, readURLsErr := ioutil.ReadFile(*urlsFile)
-	if readURLsErr != nil {
-		fmt.Println("Error reading URLs file:", readURLsErr)
-		return
-	}
-	urls := strings.Split(string(urlsData), "\n")
+	var urls []string
 
-	
-	payloadsData, readPayloadsErr := ioutil.ReadFile(*payloadsFile)
+	if url != "" {
+		urls = append(urls, url)
+	} else {
+		_, err := os.Stat(urlsFile)
+		if err != nil {
+			fmt.Println("URLs file not found. Make sure the file exists.")
+			return
+		}
+
+		urlsData, readURLsErr := ioutil.ReadFile(urlsFile)
+		if readURLsErr != nil {
+			fmt.Println("Error reading URLs file:", readURLsErr)
+			return
+		}
+		urls = strings.Split(string(urlsData), "\n")
+	}
+
+	payloadsData, readPayloadsErr := ioutil.ReadFile(payloadsFile)
 	if readPayloadsErr != nil {
 		fmt.Println("Error reading payloads file:", readPayloadsErr)
 		return
 	}
 	payloads := strings.Split(string(payloadsData), "\n")
 
-	
-	output, createOutputErr := os.Create(*outputFile)
+	output, createOutputErr := os.Create(outputFile)
 	if createOutputErr != nil {
 		fmt.Println("Error creating output file:", createOutputErr)
 		return
 	}
 	defer output.Close()
 
-	
 	var wg sync.WaitGroup
+	threadCh := make(chan struct{}, threads)
 
-	
-	threadCh := make(chan struct{}, *threads)
-
-	
-	for _, url := range urls {
+	for _, u := range urls {
 		for _, payload := range payloads {
-			
 			threadCh <- struct{}{}
 
 			wg.Add(1)
 			go func(url, payload string) {
 				defer wg.Done()
 				defer func() {
-					
 					<-threadCh
 				}()
 
 				fullURL := url + payload
 
-	
 				if isValidURL(fullURL) {
-					// Send a GET request to the URL and store the response
 					resp, getErr := http.Get(fullURL)
 					if getErr != nil {
 						if verbose {
@@ -111,20 +118,18 @@ _  /  / /  _  /    / /__  / /_/ /_  __/ /__  __/_/_____/_  /____  __/  _  /
 					}
 					defer resp.Body.Close()
 
-					if verbose {
-						fmt.Printf("%sRequest:%s %s\n", GREEN, NC, fullURL)
-					}
+					fmt.Printf("%sRequest:%s %s\n", GREEN, NC, fullURL)
 
 					body, readErr := ioutil.ReadAll(resp.Body)
 					if readErr == nil && strings.Contains(string(body), "root:") {
 						fmt.Printf("%sVulnerable:%s %s\n", RED, NC, fullURL)
-						output.WriteString(fullURL + "\n")
+						output.WriteString(fmt.Sprintf("Request URL: %s\nVulnerable URL: %s\n", fullURL, fullURL))
 					}
 				}
-			}(url, payload)
+			}(u, payload)
 		}
 	}
-	
+
 	wg.Wait()
 }
 
