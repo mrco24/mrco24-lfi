@@ -46,7 +46,7 @@ cp -r /root/go/bin/mrco24-lfi /usr/local/bin
 ```
 # Usage:
 ```
-mrco24-lfi -u urls.txt -p payloads.txt -o output.txt -v
+mrco24-lfi -f urls.txt -p payloads.txt -o output.txt -v
 ```
 # Remove =
 ```
